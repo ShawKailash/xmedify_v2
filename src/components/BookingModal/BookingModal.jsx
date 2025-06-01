@@ -81,15 +81,21 @@ export default function BookingModal({
         <Typography component="h3" variant="h3">
           Confirm booking
         </Typography>
+        <Box mb={3}>
+        <p>Today</p>
+        <p>
+        {formatDate(bookingDetails.bookingDate)}
+        </p>
+        <p>Morning</p>
+        <p>Afternoon</p>
+        <p>Evening</p>
+        <p>{bookingDetails.bookingTime}</p>
+        </Box>
         <Typography fontSize={14} mb={3}>
-          <Box component="span">
-            Please enter your email to confirm booking for{" "}
-          </Box>
-          <Box component="span" fontWeight={600}>
-            {`${bookingDetails.bookingTime} on ${formatDate(
-              bookingDetails.bookingDate
-            )}`}
-          </Box>
+        Please enter your email to confirm booking for{" "}
+        <strong>{`${bookingDetails.bookingTime} on ${formatDate(
+        bookingDetails.bookingDate
+        )}`}</strong>
         </Typography>
         <form onSubmit={handleBooking}>
           <Stack alignItems="flex-start" spacing={2}>
