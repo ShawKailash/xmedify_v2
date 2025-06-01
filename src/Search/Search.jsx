@@ -14,6 +14,7 @@ export default function Search() {
   const [searchParams] = useSearchParams();
   const [state, setState] = useState(searchParams.get("state") || "");
   const [city, setCity] = useState(searchParams.get("city") || "");
+  const [hospitals, setHospitals] = useState([]);
 
   const availableSlots = {
     morning: ["11:30 AM"],
