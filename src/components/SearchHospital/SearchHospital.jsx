@@ -28,35 +28,29 @@ export default function SearchHospital() {
   }, []);
 
   useEffect(() => {
-  const fetchCities = async () => {
-    setCities([]);
-    setCity("");
-    try {
-      const data = await axios.get(
-        `https://meddata-backend.onrender.com/cities/${state}`
-      );
-      setCities(data.data);
-    } catch (error) {
-      console.log("Error in fetching city:", error);
+    const fetchCities = async () => {
+      setCities([]);
+      setFormData((prev) => ({ ...prev, city: "" }));
+      try {
+        const data = await axios.get(
+          `https://meddata-backend.onrender.com/cities/${formData.state}`
+        );
+        setCities(data.data);
+        // console.log("city", data.data);
+      } catch (error) {
+        console.log("Error in fetching city:", error);
+      }
+    };
+
+    if (formData.state != "") {
+      fetchCities();
     }
-  };
-
-  if (state !== "") {
-    fetchCities();
-  }
-}, [state, setCity]);
-
+  }, [formData.state]);
 
   const handleChange = (e) => {
-  const { name, value } = e.target;
-  if (name === "state") {
-    setState(value);
-    setCity(""); // reset city when state changes
-  } else if (name === "city") {
-    setCity(value);
-  }
-};
-
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
