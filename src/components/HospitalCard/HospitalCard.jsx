@@ -111,14 +111,15 @@ export default function HospitalCard({
                 Available Today
               </Typography>
               <Button
-                variant="contained"
-                disableElevation
-                onClick={() => setShowCalendar((prev) => !prev)}
-              >
-                {!showCalendar
-                  ? "Book FREE Center Visit"
-                  : "Hide Booking Calendar"}
-              </Button>
+  variant="contained"
+  disableElevation
+  data-testid="book-visit-btn"
+  onClick={() => setShowCalendar((prev) => !prev)}
+>
+  {!showCalendar ? "Book FREE Center Visit" : "Hide Booking Calendar"}
+</Button>
+
+
             </>
           )}
 

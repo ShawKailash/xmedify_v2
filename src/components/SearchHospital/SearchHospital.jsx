@@ -2,60 +2,58 @@ import { MenuItem, Select, Button, InputAdornment, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
-//Component to search the hospitals based on State and City selection.
-//API used to fetch details of hospital and set the values in formData
-export default function SearchHospital() {
+// NOTE: Now receiving state, city, setState, setCity, setSearchParams from parent
+export default function SearchHospital({ state, setState, city, setCity, setSearchParams }) {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-  const [formData, setFormData] = useState({ state: "", city: "" });
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await axios.get(
-          "https://meddata-backend.onrender.com/states"
-        );
+        const response = await axios.get("https://meddata-backend.onrender.com/states");
         setStates(response.data);
       } catch (error) {
         console.error("Error fetching states:", error);
       }
     };
-
     fetchStates();
   }, []);
 
   useEffect(() => {
     const fetchCities = async () => {
       setCities([]);
-      setFormData((prev) => ({ ...prev, city: "" }));
+      setCity("");
       try {
-        const data = await axios.get(
-          `https://meddata-backend.onrender.com/cities/${formData.state}`
-        );
-        setCities(data.data);
-        // console.log("city", data.data);
+        const response = await axios.get(`https://meddata-backend.onrender.com/cities/${state}`);
+        setCities(response.data);
       } catch (error) {
-        console.log("Error in fetching city:", error);
+        console.log("Error fetching cities:", error);
       }
     };
 
-    if (formData.state != "") {
+    if (state) {
       fetchCities();
     }
-  }, [formData.state]);
+  }, [state]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const { name, value } = e.target;
+
+  if (name === "state") {
+    setState(value);
+    setCity(""); // Reset city
+    setSearchParams({ state: value }); // ✅ Update URL with state
+  } else if (name === "city") {
+    setCity(value);
+    setSearchParams({ state, city: value }); // ✅ Update URL with both
+  }
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.state && formData.city) {
-      navigate(`/search?state=${formData.state}&city=${formData.city}`);
+    if (state && city) {
+      setSearchParams({ state, city });
     }
   };
 
@@ -74,7 +72,7 @@ export default function SearchHospital() {
         displayEmpty
         id="state"
         name="state"
-        value={formData.state}
+        value={state}
         onChange={handleChange}
         startAdornment={
           <InputAdornment position="start">
@@ -84,12 +82,12 @@ export default function SearchHospital() {
         required
         sx={{ minWidth: 200, width: "100%" }}
       >
-        <MenuItem disabled value="" selected>
+        <MenuItem disabled value="">
           State
         </MenuItem>
-        {states.map((state) => (
-          <MenuItem key={state} value={state}>
-            {state}
+        {states.map((s) => (
+          <MenuItem key={s} value={s}>
+            {s}
           </MenuItem>
         ))}
       </Select>
@@ -98,7 +96,7 @@ export default function SearchHospital() {
         displayEmpty
         id="city"
         name="city"
-        value={formData.city}
+        value={city}
         onChange={handleChange}
         startAdornment={
           <InputAdornment position="start">
@@ -108,12 +106,12 @@ export default function SearchHospital() {
         required
         sx={{ minWidth: 200, width: "100%" }}
       >
-        <MenuItem disabled value="" selected>
+        <MenuItem disabled value="">
           City
         </MenuItem>
-        {cities.map((city) => (
-          <MenuItem key={city} value={city}>
-            {city}
+        {cities.map((c) => (
+          <MenuItem key={c} value={c}>
+            {c}
           </MenuItem>
         ))}
       </Select>

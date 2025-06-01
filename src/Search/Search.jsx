@@ -48,9 +48,10 @@ export default function Search() {
   }, [state, city]);
 
   useEffect(() => {
-    setState(seachParams.get("state"));
-    setCity(seachParams.get("city"));
-  }, [seachParams]);
+  setState(seachParams.get("state"));
+  setCity(seachParams.get("city"));
+}, [seachParams]);
+
 
   // show booking modal
   const handleBookingModal = (details) => {
@@ -87,7 +88,13 @@ export default function Search() {
               boxShadow: "0 0 10px rgba(0,0,0,0.1)",
             }}
           >
-            <SearchHospital />
+            <SearchHospital
+              state={state}
+              setState={setState}
+              city={city}
+              setCity={setCity}
+            />
+
           </Container>
         </Box>
 
