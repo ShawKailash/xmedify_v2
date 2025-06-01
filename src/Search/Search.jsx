@@ -11,10 +11,10 @@ import AutohideSnackbar from "../components/AutohideSnackbar/AutohideSnackbar";
 import NavBar from "../components/NavBar/NavBar";
 
 export default function Search() {
-  const [seachParams, setSearchParams] = useSearchParams();
-  const [hospitals, setHospitals] = useState([]);
-  const [state, setState] = useState(seachParams.get("state"));
-  const [city, setCity] = useState(seachParams.get("city"));
+  const [searchParams] = useSearchParams();
+  const [state, setState] = useState(searchParams.get("state") || "");
+  const [city, setCity] = useState(searchParams.get("city") || "");
+
   const availableSlots = {
     morning: ["11:30 AM"],
     afternoon: ["12:00 PM", "12:30 PM", "01:30 PM", "02:00 PM", "02:30 PM"],
@@ -48,9 +48,12 @@ export default function Search() {
   }, [state, city]);
 
   useEffect(() => {
-    setState(seachParams.get("state"));
-    setCity(seachParams.get("city"));
-  }, [seachParams]);
+    const newState = searchParams.get("state");
+    const newCity = searchParams.get("city");
+    setState(newState);
+    setCity(newCity);
+  }, [searchParams]);
+
 
   // show booking modal
   const handleBookingModal = (details) => {
